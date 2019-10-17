@@ -5,7 +5,7 @@ import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 
-import { App2 } from "./components/App";
+import { App } from "./components/App";
 import { reducers } from "./reducers";
 
 const store = createStore(reducers, applyMiddleware(thunk));
@@ -16,7 +16,7 @@ const store = createStore(reducers, applyMiddleware(thunk));
 
 ReactDOM.render(
   <Provider store={store}>
-    <App2 color="maroon" />
+    <App />
   </Provider>,
   document.querySelector("#root")
 );

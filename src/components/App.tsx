@@ -1,18 +1,14 @@
 import React from "react";
+import connect from "react-redux";
+import { Todo, fetchTodos } from "../actions";
+import { StoreState } from "../reducers";
 
 interface AppProps {
-  color?: string;
+  todos: Todo[];
+  fetchTodos(): any;
 }
 
-interface AppState {
-  count: number;
-}
-
-export const App2 = (props: AppProps): JSX.Element => {
-  return <div> Second App Div with color: {props.color} </div>;
-};
-
-export class App extends React.Component<AppProps, AppState> {
+export class App extends React.Component<AppProps> {
   constructor(props: AppProps) {
     super(props);
 
@@ -30,11 +26,15 @@ export class App extends React.Component<AppProps, AppState> {
   render() {
     return (
       <div>
-        <div> Hi there</div>
+        <div> Hi there {this.props.}</div>
         <button onClick={this.incrementHandler}>Increment </button>
         <button onClick={this.decrementHandler}>Decrement </button>
         <p>{this.state.count}</p>
       </div>
     );
   }
+}
+
+const mapStateToProps = (state: StoreState) => {
+  return {todos: state.todos}
 }
