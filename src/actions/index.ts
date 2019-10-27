@@ -14,10 +14,11 @@ export interface FetchTodosAction {
   payload: Todo[];
 }
 
-const url = "jsonplaceholder.typicode.com/todos";
+const url = "https://jsonplaceholder.typicode.com/todos";
 
 export const fetchTodos = () => async (dispatch: Dispatch) => {
   const response = await axios.get<Todo[]>(url);
+  console.log(response);
 
   dispatch<FetchTodosAction>({
     type: ActionTypes.fetchTodos,
