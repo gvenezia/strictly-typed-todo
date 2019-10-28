@@ -1,35 +1,29 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Todo, fetchTodos, deleteTodo } from "../actions";
+import { Todo, fetchTodos, deleteTodo, setFetching } from "../actions";
 import { StoreState } from "../reducers";
 
 interface AppProps {
   todos: Todo[];
-  fetchTodos: Function;
-  deleteTodo: Function;
-}
-
-interface AppState {
   fetching: boolean;
+  fetchTodos: Function;
+  deleteTodo: typeof deleteTodo;
+  setFetching: typeof setFetching;
 }
 
-class App extends React.Component<AppProps, AppState> {
+class App extends React.Component<AppProps> {
   constructor(props: AppProps) {
     super(props);
   }
 
-  componentDidUpdate(prevProps: AppProps): void {
-    if (!prevProps.todos.length && this.props.todos.length) {
-      this.setState({ fetching: false });
-    }
-  }
-
   onButtonClick = (): void => {
+    this.props.setFetching(true);
     this.props.fetchTodos();
-    this.setState({ fetching: true });
   };
 
-  onTodoClick = (id: number): void => this.props.deleteTodo(id);
+  onTodoClick = (id: number): void => {
+    this.props.deleteTodo(id);
+  };
 
   renderList = (): JSX.Element[] =>
     this.props.todos.map(({ id, title }: Todo) => (
@@ -41,18 +35,25 @@ class App extends React.Component<AppProps, AppState> {
   render() {
     return (
       <div>
-        <button onClick={this.onButtonClick}>Fetch</button>
+        {this.props.fetching ? (
+          <button disabled>Fetching</button>
+        ) : (
+          <button onClick={this.onButtonClick}>Fetch</button>
+        )}
         {this.renderList()}
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ todos }: StoreState): { todos: Todo[] } => {
-  return { todos };
+const mapStateToProps = ({
+  todos,
+  fetching
+}: StoreState): { todos: Todo[]; fetching: boolean } => {
+  return { todos, fetching };
 };
 
 export default connect(
   mapStateToProps,
-  { fetchTodos, deleteTodo }
+  { fetchTodos, deleteTodo, setFetching }
 )(App);

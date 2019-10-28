@@ -18,18 +18,37 @@ export interface DeleteTodoAction {
   payload: number;
 }
 
+export interface SetFetching {
+  type: ActionTypes.setFetching;
+  payload: boolean;
+}
+
 const url = "https://jsonplaceholder.typicode.com/todos";
 
-export const fetchTodos = () => async (dispatch: Dispatch) => {
+export const fetchTodos = () => async (dispatch: Dispatch, getState: any) => {
+  const stateIdSet: Set<Object> = new Set(
+    getState().todos.map(({ id }: any): number => id)
+  );
+
   const response = await axios.get<Todo[]>(url);
 
-  dispatch<FetchTodosAction>({
-    type: ActionTypes.fetchTodos,
-    payload: response.data
-  });
+  const newData = response.data.filter(({ id }) => !stateIdSet.has(id));
+
+  if (newData.length) {
+    dispatch<FetchTodosAction>({
+      type: ActionTypes.fetchTodos,
+      payload: response.data
+    });
+  }
+  dispatch(setFetching(false));
 };
 
 export const deleteTodo = (id: number) => ({
   type: ActionTypes.deleteTodo,
   payload: id
+});
+
+export const setFetching = (b: boolean) => ({
+  type: ActionTypes.setFetching,
+  payload: b
 });
