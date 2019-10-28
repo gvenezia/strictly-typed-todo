@@ -5,30 +5,42 @@ import { StoreState } from "../reducers";
 
 interface AppProps {
   todos: Todo[];
-  fetchTodos(): any;
+  fetchTodos: Function;
 }
 
-class App extends React.Component<AppProps> {
-  componentDidMount() {
-    this.props.fetchTodos();
-  }
+interface AppState {
+  fetching: boolean;
+}
 
+class App extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props);
-
-    this.state = { count: 0 };
   }
 
-  onClick = (): void => {
+  componentDidUpdate(prevProps: AppProps): void {
+    if (!prevProps.todos.length && this.props.todos.length) {
+      this.setState({ fetching: false });
+    }
+  }
+
+  onButtonClick = (): void => {
     this.props.fetchTodos();
+    this.setState({ fetching: true });
   };
 
-  renderList = (): JSX.Element[] =>
-    this.props.todos.map(({ title }) => <div>{title}</div>);
+  renderList(): JSX.Element[] {
+    return this.props.todos.map((todo: Todo) => {
+      return <div key={todo.id}>{todo.title}</div>;
+    });
+  }
 
   render() {
-    console.log(this.props.todos);
-    return <div onClick={this.onClick} />;
+    return (
+      <div>
+        <button onClick={this.onButtonClick}>Fetch</button>
+        {this.renderList()}
+      </div>
+    );
   }
 }
 

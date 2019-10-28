@@ -1,4 +1,5 @@
 # Strictly Typed Todo List
+
 A simple list of todos built with Typescript, React, and Redux.
 
 ---

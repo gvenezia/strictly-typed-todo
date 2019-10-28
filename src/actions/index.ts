@@ -1,6 +1,5 @@
 import axios from "axios";
 import { Dispatch } from "redux";
-
 import { ActionTypes } from "./types";
 
 export interface Todo {
@@ -18,7 +17,6 @@ const url = "https://jsonplaceholder.typicode.com/todos";
 
 export const fetchTodos = () => async (dispatch: Dispatch) => {
   const response = await axios.get<Todo[]>(url);
-  console.log(response);
 
   dispatch<FetchTodosAction>({
     type: ActionTypes.fetchTodos,
